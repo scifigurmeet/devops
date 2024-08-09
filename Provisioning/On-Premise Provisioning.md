@@ -1,7 +1,7 @@
-# Practical Guide: On-Premise Provisioning
+# Practical Guide: On-Premise Provisioning for Beginners
 
 ## Introduction
-This guide will help you understand on-premise provisioning concepts through hands-on exercises using Docker on your Windows laptop. We'll simulate a small on-premise infrastructure, explore server templating, and demonstrate both server-side and client-side operations.
+This guide will help you understand on-premise provisioning concepts through hands-on exercises using Docker on your Windows laptop. We'll simulate a small on-premise infrastructure, explore server templating, and demonstrate both server-side and client-side operations. Each exercise includes an explanation of its purpose and how it relates to real-world scenarios.
 
 ## Prerequisites
 - Windows 10 or 11 laptop
@@ -10,7 +10,14 @@ This guide will help you understand on-premise provisioning concepts through han
 
 ## Part 1: Understanding On-Premise and Provisioning Infrastructure
 
+### What is On-Premise?
+"On-premise" refers to hosting and maintaining hardware and software on your own physical infrastructure, typically within your organization's facilities. This is in contrast to cloud-based solutions where resources are hosted by third-party providers.
+
 ### Exercise 1: Setting Up a Simple "On-Premise" Environment
+
+**Intention:** This exercise simulates setting up a basic on-premise server. In a real-world scenario, this would involve installing an operating system and necessary software on a physical server in your organization's data center.
+
+**Steps:**
 
 1. Open PowerShell as Administrator
 2. Create a new directory for our project:
@@ -51,7 +58,13 @@ This guide will help you understand on-premise provisioning concepts through han
 
 6. Open a web browser and navigate to `http://localhost:3000`. You should see a message from your "on-premise" server.
 
+**Interpretation:** By creating this Docker container, we've simulated setting up a single on-premise server. The Dockerfile represents the server configuration, and running the container is analogous to powering on a physical server in your data center.
+
 ### Exercise 2: Provisioning Multiple Servers
+
+**Intention:** This exercise demonstrates the concept of provisioning multiple servers, which is common in on-premise environments to handle increased load or separate different applications.
+
+**Steps:**
 
 1. Run two more instances of your server:
    ```
@@ -61,9 +74,18 @@ This guide will help you understand on-premise provisioning concepts through han
 
 2. Visit `http://localhost:3001` and `http://localhost:3002` in your browser. Notice how each server has a unique hostname.
 
+**Interpretation:** Each Docker container represents a separate server in your on-premise infrastructure. In a real-world scenario, this would be equivalent to setting up multiple physical or virtual servers in your data center. The unique hostnames demonstrate that these are distinct server instances.
+
 ## Part 2: Server Templating
 
+### What is Server Templating?
+Server templating is the practice of creating a standardized server configuration that can be easily replicated. This ensures consistency across multiple servers and simplifies the provisioning process.
+
 ### Exercise 3: Creating a Server Template
+
+**Intention:** This exercise introduces the concept of server templating, allowing you to create servers with different roles based on a single template.
+
+**Steps:**
 
 1. Create a new file named `server-template.js`:
    ```javascript
@@ -103,9 +125,15 @@ This guide will help you understand on-premise provisioning concepts through han
 
 5. Visit `http://localhost:3003` and `http://localhost:3004` to see the different server roles.
 
+**Interpretation:** The `server-template.js` file represents a server template. By using environment variables (SERVER_ROLE), we can create different server instances from the same template. This is similar to how organizations might use a single base image to create various types of servers (web servers, database servers, etc.) in their on-premise infrastructure.
+
 ## Part 3: Connectivity with Servers
 
 ### Exercise 4: Setting Up a Client
+
+**Intention:** This exercise demonstrates how clients interact with servers in an on-premise environment. It shows how applications might communicate with different servers for various purposes.
+
+**Steps:**
 
 1. Create a new file named `client.js`:
    ```javascript
@@ -140,9 +168,18 @@ This guide will help you understand on-premise provisioning concepts through han
    docker run --rm -v ${PWD}:/app -w /app node:14 node client.js
    ```
 
+**Interpretation:** This client script represents an application in your on-premise environment that needs to communicate with multiple servers. In a real-world scenario, this could be a backend service that needs to interact with both a web server and a database server.
+
 ## Part 4: Server-Side vs Client-Side Templating
 
+### What is Templating?
+Templating is a technique used to generate dynamic content by combining a template (a pre-designed layout) with data. It can be done on either the server-side or the client-side.
+
 ### Exercise 5: Server-Side Templating
+
+**Intention:** This exercise demonstrates server-side templating, where the server generates the final HTML content before sending it to the client.
+
+**Steps:**
 
 1. Install EJS templating engine:
    ```
@@ -201,7 +238,13 @@ This guide will help you understand on-premise provisioning concepts through han
 
 5. Visit `http://localhost:3005` in your browser and refresh a few times to see the time update.
 
+**Interpretation:** In this example, the server generates the complete HTML content, including the dynamic time, before sending it to the client. This approach is common in traditional web applications and can be beneficial for SEO and initial page load times.
+
 ### Exercise 6: Client-Side Templating
+
+**Intention:** This exercise showcases client-side templating, where the browser receives a template and data separately, then combines them to generate the final content.
+
+**Steps:**
 
 1. Create a new file named `client-side-template.html`:
    ```html
@@ -246,14 +289,24 @@ This guide will help you understand on-premise provisioning concepts through han
 
 3. Visit `http://localhost:3006/client-side-template.html` in your browser to see the client-side templating in action.
 
-## Conclusion
+**Interpretation:** In this example, the browser receives the template and the JavaScript code. The final content is generated in the browser, allowing for dynamic updates without server requests. This approach is common in modern single-page applications (SPAs) and can provide a more responsive user experience for dynamic content.
 
-This guide has provided hands-on experience with:
-- Setting up a simulated on-premise environment
-- Provisioning multiple servers
-- Server templating
-- Connectivity between clients and servers
-- Server-side templating
-- Client-side templating
+## Conclusion and Reflection
 
-By comparing the server-side and client-side templating examples, you can observe the differences in how and where the content is generated, helping you understand the advantages and challenges of each approach.
+This guide has provided hands-on experience with key concepts in on-premise provisioning:
+
+1. Setting up a simulated on-premise environment
+2. Provisioning multiple servers
+3. Server templating
+4. Connectivity between clients and servers
+5. Server-side templating
+6. Client-side templating
+
+**Reflection Questions:**
+
+1. How does server templating simplify the process of setting up multiple servers with different roles?
+2. What are the main differences you observed between server-side and client-side templating?
+3. Can you think of scenarios where server-side templating might be preferable to client-side templating, and vice versa?
+4. How might the challenges of managing an on-premise infrastructure differ from using cloud services?
+
+By working through these exercises and considering these questions, you should now have a practical understanding of the basics of on-premise provisioning and the related concepts of server templating and connectivity.
