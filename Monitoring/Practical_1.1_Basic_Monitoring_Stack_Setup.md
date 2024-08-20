@@ -128,7 +128,7 @@ This will start all the services defined in your `docker-compose.yml` file.
    - Go to Configuration > Data Sources
    - Click "Add data source"
    - Choose Prometheus
-   - Set URL to `http://prometheus:9090`
+   - Set URL to `http://prometheus:9090` (or http://host.docker.internal:9090)
    - Click "Save & Test"
 
 3. Create a new dashboard:
