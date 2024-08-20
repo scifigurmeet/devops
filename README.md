@@ -9,3 +9,10 @@ Welcome to the DevOps repository! This repository contains a collection of knowl
 - **Tools Overview:** Insights into popular tools and technologies used in the DevOps ecosystem.
 
 Explore the documents to gain a better understanding of DevOps and enhance your skills in this dynamic field.
+
+## Subjects
+3rd Semester - DevOps Overview
+5th Semester - Build and Release Management
+5th Semester - DevOps Automation
+7th Semester - Monitoring
+7th Semester - Provisioning
