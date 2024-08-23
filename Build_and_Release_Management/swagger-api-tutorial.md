@@ -35,7 +35,8 @@ const express = require('express');
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 
-const app = port = 3000;
+const app = express();
+const port = 3000;
 
 /**
  * @swagger
