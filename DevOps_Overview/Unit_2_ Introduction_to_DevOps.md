@@ -94,11 +94,17 @@ Key Principles:
 DevOps and Agile are like peanut butter and jelly – great on their own, but even better together!
 
 ```mermaid
-venn
-    title DevOps and Agile
-    DevOps: "Automation" "Continuous Delivery" "Infrastructure as Code"
-    Agile: "Iterative Development" "User Stories" "Sprint Planning"
-    section: "Collaboration" "Continuous Improvement" "Faster Time-to-Market"
+graph TD;
+    A[DevOps] -->|Automation| C[Collaboration]
+    A -->|Continuous Delivery| C
+    A -->|Infrastructure as Code| C
+    
+    B[Agile] -->|Iterative Development| C
+    B -->|User Stories| C
+    B -->|Sprint Planning| C
+    
+    C[Common] -->|Collaboration| D[Continuous Improvement]
+    C -->|Faster Time-to-Market| D
 ```
 
 While Agile focuses on iterative development and customer feedback, DevOps extends these principles to include operations and delivery. Together, they create a powerful approach to software development and deployment.
