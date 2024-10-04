@@ -281,7 +281,7 @@ New Relic is a popular APM tool that provides detailed performance metrics for y
    app = Flask(__name__)
    
    @app.route('/api/user/<username>')
-   @newrelic.agent.flask_application()
+   @newrelic.agent.function_trace()
    def get_user(username):
        response = requests.get(f'http://backend:5000/user/{username}')
        return jsonify(response.json())
@@ -300,7 +300,7 @@ New Relic is a popular APM tool that provides detailed performance metrics for y
    app = Flask(__name__)
    
    @app.route('/user/<username>')
-   @newrelic.agent.flask_application()
+   @newrelic.agent.function_trace()
    def get_user(username):
        # Simulate database query
        user_data = {'username': username, 'email': f'{username}@example.com'}
