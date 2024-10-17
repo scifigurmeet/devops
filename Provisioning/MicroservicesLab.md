@@ -1,7 +1,7 @@
 # Node.js Microservices with Docker - Lab Guide for Beginners
 
 ## Introduction
-Welcome to this hands-on lab guide on building microservices with Node.js and Docker! This guide is designed for B.Tech final year students who are new to microservices architecture and containerization. By the end of this 2-3 hour laboratory session, you'll have created a small but functional e-commerce application using microservices, all running in Docker containers.
+Welcome to this hands-on lab guide on building microservices with Node.js and Docker! This guide is designed for B.Tech students who are new to microservices architecture and containerization. By the end of this 2-3 hour laboratory session, you'll have created a small but functional e-commerce application using microservices, all running in Docker containers.
 
 ### What are Microservices?
 Microservices is an architectural style that structures an application as a collection of small, loosely coupled services. Each service is focused on doing one thing well, runs in its own process, and communicates with other services through well-defined APIs.
