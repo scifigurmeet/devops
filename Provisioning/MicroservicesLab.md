@@ -1,17 +1,18 @@
-# DevOps Microservices Project Lab Guide for Beginners
+# Node.js Microservices with Docker - Lab Guide for Beginners
 
 ## Introduction
-Welcome to this hands-on lab guide on microservices and Docker! This guide is designed for B.Tech final year students who are new to microservices architecture and containerization. By the end of this 2-3 hour laboratory session, you'll have created a small but functional e-commerce application using microservices, all running in Docker containers.
+Welcome to this hands-on lab guide on building microservices with Node.js and Docker! This guide is designed for B.Tech final year students who are new to microservices architecture and containerization. By the end of this 2-3 hour laboratory session, you'll have created a small but functional e-commerce application using microservices, all running in Docker containers.
 
 ### What are Microservices?
-Microservices is an architectural style that structures an application as a collection of small, loosely coupled services. Each service is focused on doing one thing well, runs in its own process, and communicates with other services through well-defined APIs. This approach contrasts with monolithic architectures where all functionality exists in a single, tightly-coupled application.
+Microservices is an architectural style that structures an application as a collection of small, loosely coupled services. Each service is focused on doing one thing well, runs in its own process, and communicates with other services through well-defined APIs.
 
 ### Why Docker?
-Docker is a platform for developing, shipping, and running applications in containers. Containers are lightweight, standalone, executable packages that include everything needed to run a piece of software, including the code, runtime, system tools, libraries, and settings. Docker makes it easy to create, deploy, and run applications in a consistent environment, which is crucial when working with microservices.
+Docker is a platform for developing, shipping, and running applications in containers. Containers are lightweight, standalone, executable packages that include everything needed to run a piece of software, including the code, runtime, system tools, libraries, and settings.
 
 ## Prerequisites
-- Docker Desktop installed on your Windows PC
-- Basic knowledge of Python and Flask
+- Docker Desktop installed on your Windows PC (version 20.10.0 or later)
+- Node.js installed on your local machine (version 14.x or later)
+- Basic knowledge of JavaScript and Express.js
 - Familiarity with RESTful APIs
 - Text editor (e.g., Visual Studio Code)
 
@@ -21,178 +22,238 @@ Our e-commerce application will consist of the following microservices:
 2. Order Service: Handles order processing
 3. Frontend Service: Serves the user interface and integrates the other services
 
-Each service will run in its own Docker container, demonstrating the isolation and independence of microservices.
-
 ## Step 1: Set Up Project Structure (15 minutes)
-Create the following directory structure for your project:
+
+To quickly set up the project structure, you can use the following Windows batch script. This script will create all the necessary directories and empty files for our project.
+
+1. Open a text editor and create a new file named `setup_project.bat`.
+2. Copy and paste the following content into the file:
+
+```batch
+@echo off
+
+REM Create main project directory
+mkdir ecommerce-microservices
+cd ecommerce-microservices
+
+REM Create product-service structure
+mkdir product-service
+mkdir product-service\src
+type nul > product-service\src\index.js
+type nul > product-service\package.json
+type nul > product-service\Dockerfile
+
+REM Create order-service structure
+mkdir order-service
+mkdir order-service\src
+type nul > order-service\src\index.js
+type nul > order-service\package.json
+type nul > order-service\Dockerfile
+
+REM Create frontend-service structure
+mkdir frontend-service
+mkdir frontend-service\src
+mkdir frontend-service\src\public
+type nul > frontend-service\src\index.js
+type nul > frontend-service\src\public\index.html
+type nul > frontend-service\package.json
+type nul > frontend-service\Dockerfile
+
+REM Create docker-compose.yml in the root directory
+type nul > docker-compose.yml
+
+echo Project structure created successfully!
+```
+
+3. Save the file and close the text editor.
+4. Open a Command Prompt (cmd) window.
+5. Navigate to the directory where you saved the `setup_project.bat` file.
+6. Run the script by typing its name:
+
+```
+setup_project.bat
+```
+
+This script will create the following directory structure:
 
 ```
 ecommerce-microservices/
 ├── product-service/
-│   ├── app.py
-│   ├── Dockerfile
-│   └── requirements.txt
+│   ├── src/
+│   │   └── index.js
+│   ├── package.json
+│   └── Dockerfile
 ├── order-service/
-│   ├── app.py
-│   ├── Dockerfile
-│   └── requirements.txt
+│   ├── src/
+│   │   └── index.js
+│   ├── package.json
+│   └── Dockerfile
 ├── frontend-service/
-│   ├── app.py
-│   ├── Dockerfile
-│   ├── requirements.txt
-│   └── templates/
-│       └── index.html
+│   ├── src/
+│   │   ├── index.js
+│   │   └── public/
+│   │       └── index.html
+│   ├── package.json
+│   └── Dockerfile
 └── docker-compose.yml
 ```
 
-This structure separates each microservice into its own directory, promoting modularity and independence. The `docker-compose.yml` file at the root will orchestrate all services.
+Now that we have our project structure set up, let's move on to implementing each service.
 
 ## Step 2: Implement Product Service (30 minutes)
 
-### Understanding the Product Service
-The Product Service is responsible for managing product information. In a real-world scenario, this service would interact with a database to store and retrieve product data. For simplicity, we'll use an in-memory list to store products.
+1. In `product-service/src/index.js`, create an Express app:
 
-1. In `product-service/app.py`, create a Flask app with a simple in-memory product database:
+```javascript
+const express = require('express');
+const app = express();
+const PORT = 3000;
 
-```python
-from flask import Flask, jsonify
-app = Flask(__name__)
+// In-memory product database
+const products = [
+    { id: 1, name: "Laptop", price: 999.99 },
+    { id: 2, name: "Smartphone", price: 499.99 },
+    { id: 3, name: "Headphones", price: 99.99 }
+];
 
-# In-memory product database
-products = [
-    {"id": 1, "name": "Laptop", "price": 999.99},
-    {"id": 2, "name": "Smartphone", "price": 499.99},
-    {"id": 3, "name": "Headphones", "price": 99.99}
-]
+app.use(express.json());
 
-@app.route('/products', methods=['GET'])
-def get_products():
-    return jsonify(products)
+app.get('/products', (req, res) => {
+    res.json(products);
+});
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+app.listen(PORT, () => {
+    console.log(`Product service listening at http://localhost:${PORT}`);
+});
 ```
 
-Explanation:
-- We create a Flask application and define a list of products.
-- The `@app.route('/products', methods=['GET'])` decorator creates an endpoint that responds to GET requests at the '/products' URL.
-- The `get_products()` function returns the list of products as a JSON response.
-- We run the app on host `0.0.0.0` to make it accessible outside the container, and on port 5000.
+2. Update `product-service/package.json`:
 
-2. Create `product-service/requirements.txt`:
+```json
+{
+  "name": "product-service",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "scripts": {
+    "start": "node src/index.js"
+  }
+}
 ```
-Flask==2.0.1
-```
-This file lists the Python packages required for the service.
 
-3. Create `product-service/Dockerfile`:
+3. Update `product-service/Dockerfile`:
+
 ```dockerfile
-FROM python:3.9-slim
+FROM node:14
 WORKDIR /app
-COPY requirements.txt .
-RUN pip install -r requirements.txt
+COPY package*.json ./
+RUN npm install
 COPY . .
-CMD ["python", "app.py"]
+EXPOSE 3000
+CMD ["npm", "start"]
 ```
-
-Explanation of the Dockerfile:
-- `FROM python:3.9-slim`: Use the official Python 3.9 slim image as the base.
-- `WORKDIR /app`: Set the working directory in the container.
-- `COPY requirements.txt .`: Copy the requirements file into the container.
-- `RUN pip install -r requirements.txt`: Install the required Python packages.
-- `COPY . .`: Copy all files from the current directory to the container.
-- `CMD ["python", "app.py"]`: Specify the command to run when the container starts.
 
 ## Step 3: Implement Order Service (30 minutes)
 
-### Understanding the Order Service
-The Order Service handles order processing. It will allow creating new orders and retrieving all orders. Like the Product Service, we'll use an in-memory list to store orders for simplicity.
+1. In `order-service/src/index.js`, create an Express app:
 
-1. In `order-service/app.py`, create a Flask app with a simple in-memory order database:
+```javascript
+const express = require('express');
+const app = express();
+const PORT = 3001;
 
-```python
-from flask import Flask, request, jsonify
-import uuid
+app.use(express.json());
 
-app = Flask(__name__)
+// In-memory order database
+let orders = [];
 
-# In-memory order database
-orders = []
+app.post('/orders', (req, res) => {
+    const order = {
+        id: orders.length + 1,
+        ...req.body
+    };
+    orders.push(order);
+    res.status(201).json(order);
+});
 
-@app.route('/orders', methods=['POST'])
-def create_order():
-    order = request.json
-    order['id'] = str(uuid.uuid4())  # Generate a unique ID for the order
-    orders.append(order)
-    return jsonify(order), 201
+app.get('/orders', (req, res) => {
+    res.json(orders);
+});
 
-@app.route('/orders', methods=['GET'])
-def get_orders():
-    return jsonify(orders)
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5001)
+app.listen(PORT, () => {
+    console.log(`Order service listening at http://localhost:${PORT}`);
+});
 ```
 
-Explanation:
-- We create two endpoints: one for creating orders (POST) and one for retrieving all orders (GET).
-- The `create_order()` function receives order data as JSON, generates a unique ID, and adds it to the orders list.
-- The `get_orders()` function returns all orders as a JSON response.
+2. Update `order-service/package.json`:
 
-2. Create `order-service/requirements.txt`:
-```
-Flask==2.0.1
+```json
+{
+  "name": "order-service",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "scripts": {
+    "start": "node src/index.js"
+  }
+}
 ```
 
-3. Create `order-service/Dockerfile`:
+3. Update `order-service/Dockerfile`:
+
 ```dockerfile
-FROM python:3.9-slim
+FROM node:14
 WORKDIR /app
-COPY requirements.txt .
-RUN pip install -r requirements.txt
+COPY package*.json ./
+RUN npm install
 COPY . .
-CMD ["python", "app.py"]
+EXPOSE 3001
+CMD ["npm", "start"]
 ```
-
-This Dockerfile is similar to the one for the Product Service.
 
 ## Step 4: Implement Frontend Service (40 minutes)
 
-### Understanding the Frontend Service
-The Frontend Service serves as the user interface and integrates the Product and Order services. It will display products, allow adding them to a cart, and place orders.
+1. In `frontend-service/src/index.js`, create an Express app:
 
-1. In `frontend-service/app.py`, create a Flask app that interacts with both the product and order services:
+```javascript
+const express = require('express');
+const path = require('path');
+const axios = require('axios');
+const app = express();
+const PORT = 3002;
 
-```python
-from flask import Flask, render_template, request, jsonify
-import requests
+app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
 
-app = Flask(__name__)
+app.get('/api/products', async (req, res) => {
+    try {
+        const response = await axios.get('http://product-service:3000/products');
+        res.json(response.data);
+    } catch (error) {
+        res.status(500).json({ error: 'Error fetching products' });
+    }
+});
 
-PRODUCT_SERVICE_URL = 'http://product-service:5000'
-ORDER_SERVICE_URL = 'http://order-service:5001'
+app.post('/api/orders', async (req, res) => {
+    try {
+        const response = await axios.post('http://order-service:3001/orders', req.body);
+        res.status(201).json(response.data);
+    } catch (error) {
+        res.status(500).json({ error: 'Error creating order' });
+    }
+});
 
-@app.route('/')
-def index():
-    products = requests.get(f'{PRODUCT_SERVICE_URL}/products').json()
-    return render_template('index.html', products=products)
-
-@app.route('/place-order', methods=['POST'])
-def place_order():
-    order = request.json
-    response = requests.post(f'{ORDER_SERVICE_URL}/orders', json=order)
-    return jsonify(response.json()), response.status_code
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5002)
+app.listen(PORT, () => {
+    console.log(`Frontend service listening at http://localhost:${PORT}`);
+});
 ```
 
-Explanation:
-- We define URLs for the Product and Order services. Note that we use the service names defined in Docker Compose (explained later) as hostnames.
-- The `index()` function retrieves products from the Product Service and renders them in the HTML template.
-- The `place_order()` function receives order data from the frontend and sends it to the Order Service.
+2. Update `frontend-service/src/public/index.html`:
 
-2. Create `frontend-service/templates/index.html`:
 ```html
 <!DOCTYPE html>
 <html lang="en">
@@ -200,85 +261,105 @@ Explanation:
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>E-commerce Microservices Demo</title>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
 </head>
 <body>
     <div id="app">
         <h1>Product List</h1>
-        <ul>
-            <li v-for="product in products" :key="product.id">
-                {{ product.name }} - ${{ product.price }}
-                <button @click="addToCart(product)">Add to Cart</button>
-            </li>
-        </ul>
+        <ul id="productList"></ul>
         <h2>Cart</h2>
-        <ul>
-            <li v-for="item in cart" :key="item.id">
-                {{ item.name }} - ${{ item.price }}
-            </li>
-        </ul>
-        <button @click="placeOrder" :disabled="cart.length === 0">Place Order</button>
-        <div v-if="orderPlaced">Order placed successfully!</div>
+        <ul id="cart"></ul>
+        <button id="placeOrder" disabled>Place Order</button>
+        <div id="orderStatus"></div>
     </div>
     <script>
-        new Vue({
-            el: '#app',
-            data: {
-                products: {{ products|tojson|safe }},
-                cart: [],
-                orderPlaced: false
-            },
-            methods: {
-                addToCart(product) {
-                    this.cart.push(product);
-                },
-                placeOrder() {
-                    fetch('/place-order', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            items: this.cart
-                        })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        this.orderPlaced = true;
-                        this.cart = [];
-                    });
-                }
-            }
-        });
+        const productList = document.getElementById('productList');
+        const cart = document.getElementById('cart');
+        const placeOrderBtn = document.getElementById('placeOrder');
+        const orderStatus = document.getElementById('orderStatus');
+        let cartItems = [];
+
+        fetch('/api/products')
+            .then(response => response.json())
+            .then(products => {
+                products.forEach(product => {
+                    const li = document.createElement('li');
+                    li.textContent = `${product.name} - $${product.price}`;
+                    const addBtn = document.createElement('button');
+                    addBtn.textContent = 'Add to Cart';
+                    addBtn.onclick = () => addToCart(product);
+                    li.appendChild(addBtn);
+                    productList.appendChild(li);
+                });
+            });
+
+        function addToCart(product) {
+            cartItems.push(product);
+            updateCart();
+        }
+
+        function updateCart() {
+            cart.innerHTML = '';
+            cartItems.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = `${item.name} - $${item.price}`;
+                cart.appendChild(li);
+            });
+            placeOrderBtn.disabled = cartItems.length === 0;
+        }
+
+        placeOrderBtn.onclick = () => {
+            fetch('/api/orders', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ items: cartItems })
+            })
+            .then(response => response.json())
+            .then(order => {
+                orderStatus.textContent = `Order placed successfully! Order ID: ${order.id}`;
+                cartItems = [];
+                updateCart();
+            })
+            .catch(error => {
+                orderStatus.textContent = 'Error placing order';
+            });
+        };
     </script>
 </body>
 </html>
 ```
 
-This HTML file uses Vue.js for dynamic content and interactivity. It displays products, allows adding them to a cart, and placing orders.
+3. Update `frontend-service/package.json`:
 
-3. Create `frontend-service/requirements.txt`:
-```
-Flask==2.0.1
-requests==2.26.0
+```json
+{
+  "name": "frontend-service",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "dependencies": {
+    "express": "^4.17.1",
+    "axios": "^0.21.1"
+  },
+  "scripts": {
+    "start": "node src/index.js"
+  }
+}
 ```
 
-4. Create `frontend-service/Dockerfile`:
+4. Update `frontend-service/Dockerfile`:
+
 ```dockerfile
-FROM python:3.9-slim
+FROM node:14
 WORKDIR /app
-COPY requirements.txt .
-RUN pip install -r requirements.txt
+COPY package*.json ./
+RUN npm install
 COPY . .
-CMD ["python", "app.py"]
+EXPOSE 3002
+CMD ["npm", "start"]
 ```
 
 ## Step 5: Create Docker Compose File (20 minutes)
 
-### Understanding Docker Compose
-Docker Compose is a tool for defining and running multi-container Docker applications. It uses a YAML file to configure the application's services, networks, and volumes.
-
-Create a `docker-compose.yml` file in the root directory:
+Update the `docker-compose.yml` file in the root directory:
 
 ```yaml
 version: '3'
@@ -286,26 +367,21 @@ services:
   product-service:
     build: ./product-service
     ports:
-      - "5000:5000"
+      - "3000:3000"
 
   order-service:
     build: ./order-service
     ports:
-      - "5001:5001"
+      - "3001:3001"
 
   frontend-service:
     build: ./frontend-service
     ports:
-      - "5002:5002"
+      - "3002:3002"
     depends_on:
       - product-service
       - order-service
 ```
-
-Explanation:
-- We define three services: product-service, order-service, and frontend-service.
-- For each service, we specify the build context (the directory containing the Dockerfile) and the ports to expose.
-- The `depends_on` field for the frontend-service ensures that it starts after the other services.
 
 ## Step 6: Build and Run the Application (15 minutes)
 1. Open a terminal in the root directory of your project.
@@ -315,43 +391,28 @@ Explanation:
    ```
 3. Wait for the containers to start. You should see output from all three services.
 
-This command does the following:
-- Builds Docker images for each service based on their Dockerfiles.
-- Creates a Docker network for the services to communicate.
-- Starts containers for each service, mapping the specified ports to the host.
-
 ## Step 7: Test the Application (20 minutes)
-1. Open a web browser and navigate to `http://localhost:5002`.
+1. Open a web browser and navigate to `http://localhost:3002`.
 2. You should see a list of products. Add some products to the cart and place an order.
-3. To verify the order was created, you can use curl or a tool like Postman to send a GET request to `http://localhost:5001/orders`.
+3. To verify the order was created, you can use curl or a tool like Postman to send a GET request to `http://localhost:3001/orders`.
 
 Example using curl:
 ```
-curl http://localhost:5001/orders
+curl http://localhost:3001/orders
 ```
 
-This should return a JSON array of orders.
-
 ## Conclusion and Further Exploration (20 minutes)
-Congratulations! You've created a basic microservices application using Docker. Let's recap what we've learned:
+Congratulations! You've created a basic microservices application using Node.js and Docker. Here are some ideas for further exploration:
 
-1. Microservices Architecture: We built three separate services, each with its own responsibility.
-2. Docker Containers: Each service runs in its own container, providing isolation and portability.
-3. Docker Compose: We used Docker Compose to orchestrate our multi-container application.
-4. Inter-service Communication: Our services communicate with each other over HTTP.
-
-Here are some ideas for further exploration:
-
-1. Persistent Storage: Add databases (e.g., MySQL, MongoDB) to store products and orders persistently.
-2. Service Discovery: Implement service discovery using tools like Consul or etcd.
-3. API Gateway: Add an API gateway to route requests to the appropriate services and handle cross-cutting concerns like authentication.
-4. Authentication and Authorization: Implement user accounts and secure the services.
-5. Container Orchestration: Explore using Docker Swarm or Kubernetes for managing your containerized services at scale.
-6. Monitoring and Logging: Add centralized logging and monitoring to your microservices.
+1. Add a database (e.g., MongoDB) to each service for persistent storage.
+2. Implement error handling and logging in each service.
+3. Add authentication and authorization to the services.
+4. Implement service discovery using tools like Consul or etcd.
+5. Explore using Docker Swarm or Kubernetes for container orchestration.
 
 Remember to stop your containers when you're done:
 ```
 docker-compose down
 ```
 
-This lab has introduced you to key concepts in microservices architecture and containerization. Continue exploring these technologies to deepen your understanding of DevOps practices. Don't hesitate to experiment with the code, add new features, or try different configurations!
+This lab has introduced you to key concepts in microservices architecture and containerization using Node.js and Docker. Continue exploring these technologies to deepen your understanding of DevOps practices.
