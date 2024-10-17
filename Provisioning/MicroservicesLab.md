@@ -22,6 +22,23 @@ Our e-commerce application will consist of the following microservices:
 2. Order Service: Handles order processing
 3. Frontend Service: Serves the user interface and integrates the other services
 
+```mermaid
+graph TD
+    A[Client Browser] -->|HTTP| B(Frontend Service :3002)
+    B -->|HTTP| C(Product Service :3000)
+    B -->|HTTP| D(Order Service :3001)
+    
+    subgraph Docker Network
+    B
+    C
+    D
+    end
+    
+    C -->|GET /products| E[(Product Data)]
+    D -->|POST /orders| F[(Order Data)]
+    D -->|GET /orders| F
+```
+
 ## Step 1: Set Up Project Structure (15 minutes)
 
 To quickly set up the project structure, you can use the following Windows batch script. This script will create all the necessary directories and empty files for our project.
