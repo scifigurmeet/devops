@@ -26,6 +26,27 @@ Zabbix is an open-source monitoring solution for IT infrastructure. Key features
 - Windows PC with Docker Desktop installed
 - Basic understanding of Docker and YAML
 
+### Architecture
+```mermaid
+graph TD
+    User[User]
+    DockerHost[Docker Host]
+    
+    subgraph DockerEnvironment[Docker Environment]
+        WebInterface[Zabbix Web Interface]
+        Server[Zabbix Server]
+        Database[PostgreSQL Database]
+        MonitoredHost[Monitored Host]
+    end
+    
+    User -->|Interacts with| WebInterface
+    DockerHost -->|Runs| DockerEnvironment
+    WebInterface -->|Communicates with| Server
+    Server -->|Stores/Retrieves Data| Database
+    Server -->|Monitors| MonitoredHost
+    MonitoredHost -->|Sends Metrics| Server
+```
+
 ### Step-by-step Setup
 
 1. Create a new directory for your Zabbix project:
