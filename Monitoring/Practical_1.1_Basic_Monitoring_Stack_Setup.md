@@ -13,6 +13,23 @@ Each of these tools plays a crucial role in monitoring and visualizing the healt
 
 ## Tool Overview
 
+```mermaid
+flowchart LR
+    NE[Node Exporter] -->|System Metrics| P[Prometheus]
+    P -->|Scrapes Metrics| G[Grafana]
+    P -->|Performance Data| N[Nagios]
+    
+    subgraph Host Machine
+        NE
+    end
+    
+    subgraph Monitoring Stack
+        P
+        G -->|Visualizes Data| Dashboard((Dashboards))
+        N -->|Alerts & Reports| WebUI((Web Interface))
+    end
+```
+
 ### Prometheus
 
 Prometheus is an open-source monitoring and alerting toolkit. It collects and stores time-series data as metrics, making it ideal for monitoring system and application performance.
