@@ -43,7 +43,7 @@ export default function Home() {
                 Fast Deployment
               </h2>
               <p className="text-gray-600">
-                Deploy quickly with Vercel's seamless platform
+                Deploy quickly with Vercel&#39;s seamless platform
               </p>
             </div>
 
