@@ -1,8 +1,8 @@
-# Ansible Beginner's Guide with Practical Exercises
+# Ansible Beginner's Guide with WSL
 
 ## Introduction
 
-Welcome to this beginner's guide on Ansible! This document is designed for DevOps students who have Docker installed on their Windows PCs. We'll explore Ansible through practical exercises, each with a clear intention, explanation, and interpretation.
+Welcome to this beginner's guide on Ansible! This document is designed for DevOps students who have Windows Subsystem for Linux (WSL) installed on their Windows PCs. We'll explore Ansible through practical exercises, each with a clear intention, explanation, and interpretation.
 
 ## What is Ansible?
 
@@ -10,78 +10,57 @@ Ansible is an open-source automation tool that simplifies configuration manageme
 
 ## Setup
 
-Before we begin, let's set up our environment using Docker. We'll use Docker Compose to create a small network of containers that will serve as our Ansible control node and managed nodes.
+Before we begin, ensure you have Ubuntu WSL installed on your Windows machine. If you haven't installed it yet, you can do so by:
 
-### docker-compose.yml
+1. Opening PowerShell as Administrator and running:
+   ```powershell
+   wsl --install -d Ubuntu
+   ```
 
-Create a file named `docker-compose.yml` with the following content:
-
-```yaml
-version: '3'
-services:
-  control:
-    image: ubuntu:latest
-    container_name: ansible-control
-    volumes:
-      - ./ansible:/ansible
-    tty: true
-
-  node1:
-    image: ubuntu:latest
-    container_name: ansible-node1
-    tty: true
-
-  node2:
-    image: ubuntu:latest
-    container_name: ansible-node2
-    tty: true
-```
-
-This Docker Compose file creates three containers: one control node and two managed nodes.
-
-To start the containers, run:
-
-```
-docker-compose up -d
-```
+2. After installation, launch Ubuntu WSL and create a user account when prompted.
 
 ## Exercise 1: Installing Ansible and Basic Configuration
 
-**Intention:** Set up Ansible on the control node and configure it to communicate with managed nodes.
+**Intention:** Set up Ansible on Ubuntu WSL and configure it for local execution.
 
 **Why:** This exercise demonstrates the basic setup required for Ansible and introduces the concept of inventory.
 
 **Steps:**
 
-1. Access the control node:
-   ```
-   docker exec -it ansible-control bash
+1. Update your Ubuntu WSL system:
+   ```bash
+   sudo apt update && sudo apt upgrade -y
    ```
 
 2. Install Ansible:
-   ```
-   apt update && apt install -y ansible
+   ```bash
+   sudo apt install -y ansible
    ```
 
-3. Create an inventory file `/ansible/inventory.ini`:
+3. Create a directory for your Ansible project:
+   ```bash
+   mkdir ~/ansible
+   cd ~/ansible
+   ```
+
+4. Create the inventory file `~/ansible/inventory.ini`:
    ```ini
-   [webservers]
-   node1 ansible_host=ansible-node1
-   node2 ansible_host=ansible-node2
+   [local]
+   localhost ansible_connection=local
    ```
 
-4. Create an Ansible configuration file `/ansible/ansible.cfg`:
+5. Create the Ansible configuration file `~/ansible/ansible.cfg`:
    ```ini
    [defaults]
-   inventory = /ansible/inventory.ini
+   inventory = inventory.ini
    host_key_checking = False
    ```
 
-**What it demonstrates:** This exercise shows how to set up Ansible and define an inventory of managed nodes.
+**What it demonstrates:** This exercise shows how to set up Ansible for local execution using WSL.
 
-**Interpretation:** The inventory file defines the hosts Ansible will manage, while the configuration file sets global options for Ansible.
+**Interpretation:** The inventory file defines localhost as the managed node, while the configuration file sets global options for Ansible.
 
-**Innovative fact:** Ansible uses SSH for communication by default, but in containerized environments like this, it can use the Docker connection plugin to communicate directly with containers without SSH.
+**Innovative fact:** Using `ansible_connection=local` allows Ansible to execute tasks directly on the WSL instance without requiring SSH.
 
 ## Exercise 2: Your First Ansible Playbook
 
@@ -91,10 +70,10 @@ docker-compose up -d
 
 **Steps:**
 
-1. Create a playbook file `/ansible/webserver.yml`:
+1. Create a playbook file `~/ansible/webserver.yml`:
    ```yaml
    ---
-   - hosts: webservers
+   - hosts: local
      become: yes
      tasks:
        - name: Install Apache
@@ -110,20 +89,20 @@ docker-compose up -d
 
        - name: Create a custom index.html
          copy:
-           content: "Hello from {{ inventory_hostname }}"
+           content: "Hello from WSL Ubuntu!\n"
            dest: /var/www/html/index.html
    ```
 
 2. Run the playbook:
+   ```bash
+   ansible-playbook webserver.yml
    ```
-   ansible-playbook /ansible/webserver.yml
-   ```
 
-**What it demonstrates:** This exercise shows how to define tasks in a playbook and apply them to multiple hosts simultaneously.
+**What it demonstrates:** This exercise shows how to define tasks in a playbook and apply them locally.
 
-**Interpretation:** The playbook installs Apache, ensures it's running, and creates a custom homepage on each managed node.
+**Interpretation:** The playbook installs Apache, ensures it's running, and creates a custom homepage on your WSL instance.
 
-**Innovative fact:** Ansible's "idempotent" nature means you can run this playbook multiple times without changing the result after the first successful run.
+**Innovative fact:** You can access the Apache server from Windows by navigating to `http://localhost` in your browser, as WSL automatically forwards ports to Windows.
 
 ## Exercise 3: Using Ansible Roles
 
@@ -134,11 +113,11 @@ docker-compose up -d
 **Steps:**
 
 1. Create a role structure:
-   ```
-   mkdir -p /ansible/roles/webserver/{tasks,handlers,templates}
+   ```bash
+   mkdir -p ~/ansible/roles/webserver/{tasks,handlers,templates}
    ```
 
-2. Create the main task file `/ansible/roles/webserver/tasks/main.yml`:
+2. Create the main task file `~/ansible/roles/webserver/tasks/main.yml`:
    ```yaml
    ---
    - name: Install Apache
@@ -159,7 +138,7 @@ docker-compose up -d
      notify: Restart Apache
    ```
 
-3. Create a handler file `/ansible/roles/webserver/handlers/main.yml`:
+3. Create a handler file `~/ansible/roles/webserver/handlers/main.yml`:
    ```yaml
    ---
    - name: Restart Apache
@@ -168,44 +147,82 @@ docker-compose up -d
        state: restarted
    ```
 
-4. Create a template file `/ansible/roles/webserver/templates/index.html.j2`:
+4. Create a template file `~/ansible/roles/webserver/templates/index.html.j2`:
    ```html
    <html>
    <body>
-     <h1>Hello from {{ inventory_hostname }}</h1>
+     <h1>Hello from WSL Ubuntu</h1>
      <p>This server is managed by Ansible!</p>
+     <p>Hostname: {{ ansible_hostname }}</p>
    </body>
    </html>
    ```
 
-5. Update the playbook `/ansible/webserver.yml`:
+5. Update the playbook `~/ansible/webserver.yml`:
    ```yaml
    ---
-   - hosts: webservers
+   - hosts: local
      become: yes
      roles:
        - webserver
    ```
 
 6. Run the updated playbook:
-   ```
-   ansible-playbook /ansible/webserver.yml
+   ```bash
+   ansible-playbook webserver.yml
    ```
 
-**What it demonstrates:** This exercise shows how to organize Ansible code into roles, use templates, and implement handlers.
+**What it demonstrates:** This exercise shows how to organize Ansible code into roles, use templates, and implement handlers in a local environment.
 
 **Interpretation:** Roles provide a way to modularize Ansible code, making it more maintainable and reusable. Templates allow for dynamic content generation, and handlers provide a way to respond to changes.
 
-**Innovative fact:** Ansible Galaxy is a repository of community-contributed roles that you can use in your projects, significantly speeding up development time.
+**Innovative fact:** You can use `ansible-galaxy init rolename` to automatically create the role directory structure with all necessary files and folders.
+
+## Testing Your Setup
+
+To verify everything is working:
+
+1. Check if Apache is running:
+   ```bash
+   sudo service apache2 status
+   ```
+
+2. View the webpage from Windows:
+   - Open your browser and navigate to `http://localhost`
+   - You should see your custom webpage
 
 ## Conclusion
 
-This guide has introduced you to Ansible through practical exercises. You've learned how to set up Ansible, create and run playbooks, and organize your code using roles. As you continue your Ansible journey, explore more advanced topics like variables, conditionals, loops, and custom modules.
+This guide has introduced you to Ansible through practical exercises using WSL. You've learned how to:
+- Set up Ansible in WSL
+- Create and run playbooks
+- Organize your code using roles
+- Work with templates and handlers
 
-Remember to clean up your Docker environment when you're done:
+As you continue your Ansible journey, explore more advanced topics like:
+- Variables and facts
+- Conditionals and loops
+- Custom modules
+- Vault for secret management
+- Dynamic inventory
 
-```
-docker-compose down
-```
+The WSL setup provides a perfect environment for learning and testing Ansible locally before deploying to production environments.
 
 Happy automating with Ansible!
+
+## Common Issues and Solutions
+
+1. If Apache is not accessible from Windows:
+   ```bash
+   sudo service apache2 restart
+   ```
+
+2. If you get permission errors:
+   ```bash
+   sudo chown -R $USER:$USER ~/ansible
+   ```
+
+3. To check Ansible's version and installation:
+   ```bash
+   ansible --version
+   ```
