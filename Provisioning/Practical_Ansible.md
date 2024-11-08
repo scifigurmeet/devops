@@ -19,6 +19,29 @@ Before we begin, ensure you have Ubuntu WSL installed on your Windows machine. I
 
 2. After installation, launch Ubuntu WSL and create a user account when prompted.
 
+## Setup Docker Nodes
+Create a new folder on the desktop and create docker-compose.yml file and after saving it run the `docker-compose up -d` command.
+```yml
+version: '3'
+services:
+  control:
+    image: ubuntu:latest
+    container_name: ansible-control
+    volumes:
+      - ./ansible:/ansible
+    tty: true
+
+  node1:
+    image: ubuntu:latest
+    container_name: ansible-node1
+    tty: true
+
+  node2:
+    image: ubuntu:latest
+    container_name: ansible-node2
+    tty: true
+```
+
 ## Exercise 1: Installing Ansible and Basic Configuration
 
 **Intention:** Set up Ansible on Ubuntu WSL and configure it for local execution.
