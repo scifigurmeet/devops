@@ -52,16 +52,17 @@ graph TD
 
 #### Serverless Deployment Frequency
 ```mermaid
-timeline
+gantt
     title Serverless Deployment Timeline
+    dateFormat YYYY-MM-DD HH:mm
     section Morning
-        Function Update : 9:00 AM
-        Config Change : 10:30 AM
+        Function Update     :done, 2024-11-08 09:00, 30m
+        Config Change       :done, 2024-11-08 10:30, 30m
     section Afternoon
-        API Gateway Update : 2:00 PM
-        Security Patch : 4:30 PM
+        API Gateway Update  :done, 2024-11-08 14:00, 30m
+        Security Patch      :done, 2024-11-08 16:30, 30m
     section Evening
-        Performance Optimization : 7:00 PM
+        Performance Optimization :done, 2024-11-08 19:00, 30m
 ```
 
 ## 3. Service Level Concepts <a name="sls"></a>
