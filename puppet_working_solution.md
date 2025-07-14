@@ -1,6 +1,6 @@
-# Puppet Master and Agent Docker Setup Guide
+# Puppet Master and Agent Docker Setup Guide - Single Folder
 
-This guide walks you through setting up a Puppet Master and Puppet Agent using Docker containers, including a practical example of configuration management.
+This guide walks you through setting up a Puppet Master and Puppet Agent using Docker containers from a single folder, including a practical example of configuration management.
 
 ## Prerequisites
 
@@ -8,11 +8,11 @@ This guide walks you through setting up a Puppet Master and Puppet Agent using D
 - Basic understanding of Docker commands
 - Text editor for creating files
 
-## Part 1: Creating a Puppet Master Container
+## Part 1: Creating Dockerfiles
 
 ### Step 1: Create the Puppet Master Dockerfile
 
-Create a new directory for your Puppet Master and create a `Dockerfile` with the following content:
+Create a `Dockerfile.master` with the following content:
 
 ```dockerfile
 FROM puppet/puppetserver
@@ -20,12 +20,23 @@ EXPOSE 8140
 CMD ["foreground"]
 ```
 
-### Step 2: Build and Run the Puppet Master Container
+### Step 2: Create the Puppet Agent Dockerfile
+
+Create a `Dockerfile.agent` with the following content:
+
+```dockerfile
+FROM puppet/puppet-agent
+CMD ["agent", "--verbose", "--no-daemonize", "--summarize"]
+```
+
+## Part 2: Building and Running Containers
+
+### Step 1: Build and Run the Puppet Master Container
 
 Build the Docker image:
 
 ```bash
-docker build -t puppet-master .
+docker build -f Dockerfile.master -t puppet-master .
 ```
 
 Run the Puppet Master container:
@@ -36,23 +47,12 @@ docker run -d --name puppet -p 8140:8140 puppet-master
 
 **Note:** The container is named `puppet` and exposes port 8140 for Puppet communication.
 
-## Part 2: Creating a Puppet Agent Container
-
-### Step 1: Create the Puppet Agent Dockerfile
-
-In a new directory, create another `Dockerfile` for the Puppet Agent:
-
-```dockerfile
-FROM puppet/puppet-agent
-CMD ["agent", "--verbose", "--no-daemonize", "--summarize"]
-```
-
 ### Step 2: Build and Run the Puppet Agent Container
 
 Build the Puppet Agent image:
 
 ```bash
-docker build -t puppet-agent .
+docker build -f Dockerfile.agent -t puppet-agent .
 ```
 
 Run the Puppet Agent container with a link to the Puppet Master:
