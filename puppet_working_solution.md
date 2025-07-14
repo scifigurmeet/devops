@@ -31,7 +31,15 @@ CMD ["agent", "--verbose", "--no-daemonize", "--summarize"]
 
 ## Part 2: Building and Running Containers
 
-### Step 1: Build and Run the Puppet Master Container
+### Step 1: Create Manifests Directory
+
+Create a manifests directory in your current folder:
+
+```bash
+mkdir -p manifests
+```
+
+### Step 2: Build and Run the Puppet Master Container
 
 Build the Docker image:
 
@@ -39,15 +47,26 @@ Build the Docker image:
 docker build -f Dockerfile.master -t puppet-master .
 ```
 
-Run the Puppet Master container:
+Run the Puppet Master container with volume mapping:
 
+**For Linux/Mac:**
 ```bash
-docker run -d --name puppet -p 8140:8140 puppet-master
+docker run -d --name puppet -p 8140:8140 -v $(pwd)/manifests:/etc/puppetlabs/code/environments/production/manifests puppet-master
+```
+
+**For Windows CMD:**
+```cmd
+docker run -d --name puppet -p 8140:8140 -v %cd%/manifests:/etc/puppetlabs/code/environments/production/manifests puppet-master
+```
+
+**For Windows PowerShell:**
+```powershell
+docker run -d --name puppet -p 8140:8140 -v ${PWD}/manifests:/etc/puppetlabs/code/environments/production/manifests puppet-master
 ```
 
 **Note:** The container is named `puppet` and exposes port 8140 for Puppet communication.
 
-### Step 2: Build and Run the Puppet Agent Container
+### Step 3: Build and Run the Puppet Agent Container
 
 Build the Puppet Agent image:
 
@@ -63,7 +82,7 @@ docker run -d --name puppet-agent --link puppet puppet-agent
 
 **Note:** The `--link puppet` option connects the agent to the master container.
 
-### Step 3: Verify Container Status
+### Step 4: Verify Container Status
 
 Confirm that both containers are running:
 
@@ -78,28 +97,12 @@ You should see both `puppet-master` and `puppet-agent` images listed, and both c
 
 Now let's create a simple Puppet manifest and test the configuration management.
 
-### Step 1: Access the Puppet Master Container
+### Step 1: Create a Simple Puppet Manifest
 
-Enter the Puppet Master container:
-
-```bash
-docker exec -it puppet /bin/bash
-```
-
-### Step 2: Create the Manifest Directory Structure
-
-Create the necessary directory structure for Puppet manifests:
+Create a basic manifest file in your local manifests directory:
 
 ```bash
-mkdir -p /etc/puppetlabs/code/environments/production/manifests
-```
-
-### Step 3: Create a Simple Puppet Manifest
-
-Create a basic manifest file that will create a "Hello, Puppet!" file on managed nodes:
-
-```bash
-cat <<EOF > /etc/puppetlabs/code/environments/production/manifests/site.pp
+cat <<EOF > manifests/site.pp
 node default {
   file { '/tmp/hello.txt':
     ensure  => file,
@@ -115,7 +118,7 @@ EOF
 - `ensure => file` ensures the resource exists as a file
 - `content` specifies the file contents
 
-### Step 4: Test the Puppet Agent
+### Step 2: Test the Puppet Agent
 
 Run the Puppet agent to apply the configuration:
 
@@ -128,7 +131,7 @@ This command will:
 - Download and apply the manifest
 - Show verbose output of the configuration run
 
-### Step 5: Verify the Configuration
+### Step 3: Verify the Configuration
 
 Check that the file was created successfully:
 
