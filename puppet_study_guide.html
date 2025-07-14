@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Puppet Mastery - Complete Beginner's Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px 0;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            font-size: 3em;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .session-info {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .session-info h2 {
+            color: #764ba2;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .timeline {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .timeline-item {
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            padding: 15px;
+            border-radius: 10px;
+            color: white;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .timeline-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.95);
+            margin: 20px 0;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .section-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .section-header:hover {
+            background: linear-gradient(135deg, #764ba2, #667eea);
+        }
+
+        .section-header h2 {
+            flex-grow: 1;
+            font-size: 1.5em;
+        }
+
+        .section-content {
+            padding: 30px;
+            display: none;
+        }
+
+        .section-content.active {
+            display: block;
+        }
+
+        .concept-box {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .concept-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-family: 'Consolas', 'Monaco', monospace;
+            position: relative;
+            overflow-x: auto;
+        }
+
+        .code-block::before {
+            content: 'Puppet Code';
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            background: #667eea;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8em;
+        }
+
+        .command-block {
+            background: #1a202c;
+            color: #68d391;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: 'Consolas', 'Monaco', monospace;
+            border-left: 4px solid #68d391;
+        }
+
+        .command-block::before {
+            content: '$ ';
+            color: #fbb6ce;
+            font-weight: bold;
+        }
+
+        .practice-box {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            color: white;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #ff6b6b;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .info-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .puppet-logo {
+            width: 60px;
+            height: 60px;
+            fill: white;
+        }
+
+        .toggle-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .toggle-btn.active {
+            transform: rotate(180deg);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b6b, #feca57);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .lab-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .step-counter {
+            background: #ff6b6b;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+
+        .architecture-diagram {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 30px 0;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .timeline {
+                grid-template-columns: 1fr;
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <svg class="puppet-logo" viewBox="0 0 100 100">
+                <path d="M50 10 C70 10, 90 30, 90 50 C90 70, 70 90, 50 90 C30 90, 10 70, 10 50 C10 30, 30 10, 50 10 Z" fill="white"/>
+                <path d="M35 35 L35 65 L50 50 L65 65 L65 35 Z" fill="#667eea"/>
+                <circle cx="40" cy="40" r="3" fill="white"/>
+                <circle cx="60" cy="40" r="3" fill="white"/>
+            </svg>
+            <h1>Puppet Mastery</h1>
+            <p>Complete Beginner's Guide to Infrastructure as Code</p>
+        </div>
+
+        <div class="session-info">
+            <h2>🎯 2-Hour Learning Session Overview</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <strong>0-30 min</strong><br>
+                    Theory & Concepts
+                </div>
+                <div class="timeline-item">
+                    <strong>30-60 min</strong><br>
+                    Setup & Basics
+                </div>
+                <div class="timeline-item">
+                    <strong>60-90 min</strong><br>
+                    Hands-on Practice
+                </div>
+                <div class="timeline-item">
+                    <strong>90-120 min</strong><br>
+                    Real-world Examples
+                </div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress"></div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <h2>📚 What is Puppet? (Theory - 15 minutes)</h2>
+                <button class="toggle-btn">▼</button>
+            </div>
+            <div class="section-content">
+                <div class="concept-box">
+                    <h3>🤖 Puppet Definition</h3>
+                    <p>Puppet is an open-source configuration management tool that automates the deployment, configuration, and management of servers and applications across your infrastructure.</p>
+                </div>
+
+                <div class="architecture-diagram">
+                    <svg width="600" height="300" viewBox="0 0 600 300">
+                        <!-- Puppet Master -->
+                        <rect x="50" y="120" width="120" height="60" fill="#667eea" rx="10"/>
+                        <text x="110" y="140" text-anchor="middle" fill="white" font-size="12">Puppet Master</text>
+                        <text x="110" y="155" text-anchor="middle" fill="white" font-size="10">(Server)</text>
+                        
+                        <!-- Arrows -->
+                        <defs>
+                            <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                <polygon points="0 0, 10 3.5, 0 7" fill="#333"/>
+                            </marker>
+                        </defs>
+                        
+                        <!-- Nodes -->
+                        <rect x="400" y="50" width="100" height="50" fill="#f093fb" rx="8"/>
+                        <text x="450" y="70" text-anchor="middle" fill="white" font-size="10">Node 1</text>
+                        <text x="450" y="85" text-anchor="middle" fill="white" font-size="10">(Agent)</text>
+                        
+                        <rect x="400" y="125" width="100" height="50" fill="#f093fb" rx="8"/>
+                        <text x="450" y="145" text-anchor="middle" fill="white" font-size="10">Node 2</text>
+                        <text x="450" y="160" text-anchor="middle" fill="white" font-size="10">(Agent)</text>
+                        
+                        <rect x="400" y="200" width="100" height="50" fill="#f093fb" rx="8"/>
+                        <text x="450" y="220" text-anchor="middle" fill="white" font-size="10">Node 3</text>
+                        <text x="450" y="235" text-anchor="middle" fill="white" font-size="10">(Agent)</text>
+                        
+                        <!-- Connection lines -->
+                        <line x1="170" y1="140" x2="400" y2="75" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+                        <line x1="170" y1="150" x2="400" y2="150" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+                        <line x1="170" y1="160" x2="400" y2="225" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)"/>
+                        
+                        <!-- Labels -->
+                        <text x="285" y="110" text-anchor="middle" fill="#333" font-size="10">Manifests &amp; Catalogs</text>
+                        <text x="285" y="190" text-anchor="middle" fill="#333" font-size="10">Reports &amp; Facts</text>
+                    </svg>
+                </div>
+
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h3>🎯 Key Benefits</h3>
+                        <ul>
+                            <li>Automated configuration management</li>
+                            <li>Consistent server states</li>
+                            <li>Reduced manual errors</li>
+                            <li>Scalable infrastructure</li>
+                        </ul>
+                    </div>
+                    <div class="info-card">
+                        <h3>🏗️ Architecture Components</h3>
+                        <ul>
+                            <li><strong>Puppet Master:</strong> Central server</li>
+                            <li><strong>Puppet Agent:</strong> Client nodes</li>
+                            <li><strong>Manifests:</strong> Configuration files</li>
+                            <li><strong>Modules:</strong> Reusable code</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <h2>🔧 Installation & Setup (Practice - 20 minutes)</h2>
+                <button class="toggle-btn">▼</button>
+            </div>
+            <div class="section-content">
+                <div class="warning-box">
+                    <strong>⚠️ Prerequisites:</strong> Docker Desktop installed and running
+                </div>
+
+                <div class="practice-box">
+                    <h3>🐳 Step 1: Setup Puppet Master Container</h3>
+                    <div class="command-block">docker run -d --name puppet-master --hostname puppet-master -p 8140:8140 puppet/puppetserver:7.4.1</div>
+                    <p>This creates a Puppet Master server accessible on port 8140</p>
+                </div>
+
+                <div class="practice-box">
+                    <h3>🔗 Step 2: Setup Puppet Agent Container</h3>
+                    <div class="command-block">docker run -d --name puppet-agent --hostname puppet-agent --link puppet-master:puppet puppet/puppet-agent:7.4.1</div>
+                    <p>This creates a Puppet Agent that can communicate with the master</p>
+                </div>
+
+                <div class="practice-box">
+                    <h3>✅ Step 3: Verify Installation</h3>
+                    <div class="command-block">docker exec -it puppet-master puppet --version</div>
+                    <div class="command-block">docker exec -it puppet-agent puppet --version</div>
+                    <p>Both should show Puppet version 7.4.1</p>
+                </div>
+
+                <div class="lab-section">
+                    <h3>🧪 Lab Exercise: First Connection</h3>
+                    <div style="display: flex; align-items: center; margin: 15px 0;">
+                        <div class="step-counter">1</div>
+                        <div>
+                            <strong>Access Puppet Master:</strong>
+                            <div class="command-block">docker exec -it puppet-master bash</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; margin: 15px 0;">
+                        <div class="step-counter">2</div>
+                        <div>
+                            <strong>Check Puppet status:</strong>
+                            <div class="command-block">systemctl status puppetserver</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; margin: 15px 0;">
+                        <div class="step-counter">3</div>
+                        <div>
+                            <strong>View logs:</strong>
+                            <div class="command-block">tail -f /var/log/puppetlabs/puppetserver/puppetserver.log</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <h2>📝 Puppet Language Basics (Theory + Practice - 25 minutes)</h2>
+                <button class="toggle-btn">▼</button>
+            </div>
+            <div class="section-content">
+                <div class="concept-box">
+                    <h3>🔤 Puppet Language Overview</h3>
+                    <p>Puppet uses a declarative language where you describe the desired state of your system, not how to get there.</p>
+                </div>
+
+                <h3>🏠 Basic Syntax: Resources</h3>
+                <div class="code-block">
+# Basic Resource Syntax
+resource_type { 'title':
+  attribute => value,
+  attribute => value,
+}
+
+# Example: File Resource
+file { '/tmp/hello.txt':
+  content => 'Hello, Puppet World!',
+  mode    => '0644',
+  owner   => 'root',
+  group   => 'root',
+}
+                </div>
+
+                <h3>📦 Common Resource Types</h3>
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h4>📄 File Resource</h4>
+                        <div class="code-block">
+file { '/etc/myapp.conf':
+  content => template('myapp/config.erb'),
+  mode    => '0644',
+  notify  => Service['myapp'],
+}
+                        </div>
+                    </div>
+                    <div class="info-card">
+                        <h4>📦 Package Resource</h4>
+                        <div class="code-block">
+package { 'nginx':
+  ensure => installed,
+}
+                        </div>
+                    </div>
+                    <div class="info-card">
+                        <h4>⚙️ Service Resource</h4>
+                        <div class="code-block">
+service { 'nginx':
+  ensure => running,
+  enable => true,
+}
+                        </div>
+                    </div>
+                    <div class="info-card">
+                        <h4>👤 User Resource</h4>
+                        <div class="code-block">
+user { 'webapp':
+  ensure     => present,
+  home       => '/home/webapp',
+  managehome => true,
+}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lab-section">
+                    <h3>🧪 Lab Exercise: Your First Manifest</h3>
+                    <div style="display: flex; align-items: center; margin: 15px 0;">
+                        <div class="step-counter">1</div>
+                        <div>
+                            <strong>Create a manifest file:</strong>
+                            <div class="command-block">docker exec -it puppet-master nano /etc/puppetlabs/code/environments/production/manifests/site.pp</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; margin: 15px 0;">
+                        <div class="step-counter">2</div>
+                        <div>
+                            <strong>Add this content:</strong>
+                            <div class="code-block">
+node default {
+  file { '/tmp/puppet-test.txt':
+    content => "Hello from Puppet!\nTimestamp: $(date)",
+    mode    => '0644',
+  }
+  
+  package { 'vim':
+    ensure => installed,
+  }
+}
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; margin: 15px 0;">
+                        <div class="step-counter">3</div>
+                        <div>
+                            <strong>Apply the manifest:</strong>
+                            <div class="command-block">docker exec -it puppet-agent puppet agent -t</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <h2>🎯 Variables & Facts (Practice - 20 minutes)</h2>
+                <button class="toggle-btn">▼</button>
+            </div>
+            <div class="section-content">
+                <div class="concept-box">
+                    <h3>📊 Understanding Facts</h3>
+                    <p>Facts are pieces of information about nodes that Puppet automatically discovers, like OS version, IP address, memory, etc.</p>
+                </div>
+
+                <h3>🔍 Viewing Facts</h3>
+                <div class="command-block">docker exec -it puppet-agent facter</div>
+                <div class="command-block">docker exec -it puppet-agent facter os</div>
+                <div class="command-block">docker exec -it puppet-agent facter networking.ip</div>
+
+                <h3>📝 Using Variables</h3>
+                <div class="code-block">
+# Variable Declaration
+$my_variable = 'Hello World'
+$package_list = ['vim', 'curl', 'git']
+
+# Using Facts as Variables
+$os_family = $facts['os']['family']
+$ip_address = $facts['networking']['ip']
+
+# Example Usage
+file { '/tmp/system-info.txt':
+  content => "OS: ${os_family}\nIP: ${ip_address}\n",
+  mode    => '0644',
+}
+                </div>
+
+                <div class="lab-section">
+                    <h3>🧪 Lab Exercise: Dynamic Configuration</h3>
+                    <div style="display: flex; align-items: center; margin: 15px 0;">
+                        <div class="step-counter">1</div>
+                        <div>
+                            <strong>Create a dynamic manifest:</strong>
+                            <div class="code-block">
+node default {
+  $server_name = $facts['networking']['hostname']
+  $os_info = $facts['os']['name']
+  
+  file { '/tmp/server-details.txt':
+    content => "Server: ${server_name}\nOS: ${os_info}\nManaged by Puppet\n",
+    mode    => '0644',
+  }
+  
+  if $facts['os']['family'] == 'RedHat' {
+    package { 'epel-release':
+      ensure => installed,
+    }
+  }
+}
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; margin: 15px 0;">
+                        <div class="step-counter">2</div>
+                        <div>
+                            <strong>Apply and test:</strong>
+                            <div class="command-block">docker exec -it puppet-agent puppet agent -t</div>
+                            <div class="command-block">docker exec -it puppet-agent cat /tmp/server-details.txt</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <h2>🏗️ Puppet Modules (Practice - 25 minutes)</h2>
+                <button class="toggle-btn">▼</button>
+            </div>
+            <div class="section-content">
+                <div class="concept-box">
+                    <h3>📦 What are Modules?</h3>
+                    <p>Modules are reusable, shareable units of Puppet code that organize manifests, files, templates, and other resources.</p>
+                </div>
+
+                <h3>📁 Module Structure</h3>
+                <div class="code-block">
+mymodule/
+├── manifests/
+│   ├── init.pp
+│   └── config.pp
+├── files/
+├── templates/
+├── lib/
+└── metadata.json
+                </div>
+
+                <div class="lab-section">
+                    <h3>🧪 Lab Exercise: Creating a Web Server Module</h3>
+                    <div style="display: flex; align-items: center; margin: 15px 0;">
+                        <div class="step-counter">1</div>
+                        <div>
+                            <strong>Create module directory:</strong>
+                            <div class="command-block">docker exec -it puppet-master mkdir -p /etc/puppetlabs/code/environments/production/modules/webserver/manifests</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; margin: 15px 0;">
+                        <div class="step-counter">2</div>
+                        <div>
+                            <strong>Create init.pp:</strong>
+                            <div class="command-block">docker exec -it puppet-master nano /etc/puppetlabs/code/environments/production/modules/webserver/manifests/init.pp</div>
+                            <div class="code-block">
+class webserver {
+  package { 'httpd':
+    ensure => installed,
+  }
+  
+  service { 'httpd':
+    ensure  => running,
+    enable  => true,
+    require => Package['httpd'],
+  }
+  
+  file { '/var/www/html/index.html':
+    content => '<h1>Hello from Puppet Managed Server!</h1>',
+    mode    => '0644',
+    require => Package['httpd'],
+    notify  => Service['httpd'],
+  }
+}
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; margin: 15px 0;">
+                        <div class="step-counter">3</div>
+                        <div>
+                            <strong>Update site.pp to use module:</strong>
+                            <div class="code-block">
+node default {
+  include webserver
+}
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; margin: 15px 0;">
+                        <div class="step-counter">4</div>
+                        <div>
+                            <strong>Apply configuration:</strong>
+                            <div class="command-block">docker exec -it puppet-agent puppet agent -t</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <h2>🔗 Resource Relationships (Practice - 15 minutes)</h2>
+                <button class="toggle-btn">▼</button>
+            </div>
+            <div class="section-content">
+                <div class="concept-box">
+                    <h3>⚡ Managing Dependencies</h3>
+                    <p>Puppet resources can depend on each other. You can control the order of resource application using relationships.</p>
+                </div>
+
+                <h3>🔧 Relationship Types</h3>
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h4>➡️ Before/Require</h4>
+                        <div class="code-block">
+package { 'httpd':
+  ensure => installed,
+  before => Service['httpd'],
+}
+
+service { 'httpd':
+  ensure  => running,
+  require => Package['httpd'],
+}
+                        </div>
+                    </div>
+                    <div class="info-card">
+                        <h4>🔔 Notify/Subscribe</h4>
+                        <div class="code-block">
+file { '/etc/httpd/conf/httpd.conf':
+  content => template('httpd/httpd.conf.erb'),
+  notify  => Service['httpd'],
+}
+
+service { 'httpd':
+  ensure    => running,
+  subscribe => File['/etc/httpd/conf/httpd.conf'],
+}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lab-section">
+                    <h3>🧪 Lab Exercise: Database Server with Dependencies</h3>
+                    <div class="code-block">
+class database {
+  package { 'mysql-server':
+    ensure => installed,
+  }
+  
+  file { '/etc/mysql/my.cnf':
+    content => template('database/my.cnf.erb'),
+    require => Package['mysql-server'],
+    notify  => Service['mysql'],
+  }
+  
+  service { 'mysql':
+    ensure     => running,
+    enable     => true,
+    require    => Package['mysql-server'],
+    subscribe  => File['/etc/mysql/my.cnf'],
+  }
+}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <h2>🎭 Real-World Example: LAMP Stack (Practice - 20 minutes)</h2>
+                <button class="toggle-btn">▼</button>
+            </div>
+            <div class="section-content">
+                <div class="concept-box">
+                    <h3>🌟 Complete LAMP Stack Deployment</h3>
+                    <p>Let's build a complete Linux, Apache, MySQL, PHP stack using Puppet modules and proper resource relationships.</p>
+                </div>
+
+                <div class="lab-section">
+                    <h3>🧪 Lab Exercise: LAMP Stack Module</h3>
+                    <div style="display: flex; align-items: center; margin: 15px 0;">
+                        <div class="step-counter">1</div>
+                        <div>
+                            <strong>Create LAMP module structure:</strong>
+                            <div class="command-block">docker exec -it puppet-master mkdir -p /etc/puppetlabs/code/environments/production/modules/lamp/{manifests,files,templates}</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; margin: 15px 0;">
+                        <div class="step-counter">2</div>
+                        <div>
+                            <strong>Create main LAMP class:</strong>
+                            <div class="code-block">
+class lamp {
+  # Apache Web Server
+  package { 'httpd':
+    ensure => installed,
+  }
+  
+  service { 'httpd':
+    ensure  => running,
+    enable  => true,
+    require => Package['httpd'],
+  }
+  
+  # PHP
+  package { 'php':
+    ensure  => installed,
+    require => Package['httpd'],
+    notify  => Service['httpd'],
+  }
+  
+  package { 'php-mysql':
+    ensure  => installed,
+    require => Package['php'],
+    notify  => Service['httpd'],
+  }
+  
+  # MySQL Database
+  package { 'mysql-server':
+    ensure => installed,
+  }
+  
+  service { 'mysqld':
+    ensure  => running,
+    enable  => true,
+    require => Package['mysql-server'],
+  }
+  
+  # Sample PHP file
+  file { '/var/www/html/info.php':
+    content => '<?php phpinfo(); ?>',
+    mode    => '0644',
+    require => Package['httpd'],
+  }
+  
+  # Custom index page
+  file { '/var/www/html/index.html':
+    content => template('lamp/index.html.erb'),
+    mode    => '0644',
+    require => Package['httpd'],
+    notify  => Service['httpd'],
+  }
+}
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; margin: 15px 0;">
+                        <div class="step-counter">3</div>
+                        <div>
+                            <strong>Create template file:</strong>
+                            <div class="command-block">docker exec -it puppet-master nano /etc/puppetlabs/code/environments/production/modules/lamp/templates/index.html.erb</div>
+                            <div class="code-block">
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LAMP Stack - Managed by Puppet</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .header { background: #333; color: white; padding: 20px; }
+        .content { padding: 20px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🚀 LAMP Stack Server</h1>
+        <p>Automatically configured with Puppet</p>
+    </div>
+    <div class="content">
+        <h2>Server Information</h2>
+        <p><strong>Hostname:</strong> <%= @facts['networking']['hostname'] %></p>
+        <p><strong>OS:</strong> <%= @facts['os']['name'] %> <%= @facts['os']['release']['major'] %></p>
+        <p><strong>IP Address:</strong> <%= @facts['networking']['ip'] %></p>
+        <p><strong>Puppet Version:</strong> <%= @facts['puppetversion'] %></p>
+        
+        <h2>Services Status</h2>
+        <ul>
+            <li>✅ Apache HTTP Server</li>
+            <li>✅ PHP Engine</li>
+            <li>✅ MySQL Database</li>
+        </ul>
+        
+        <p><a href="info.php">View PHP Info</a></p>
+    </div>
+</body>
+</html>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; margin: 15px 0;">
+                        <div class="step-counter">4</div>
+                        <div>
+                            <strong>Update site.pp:</strong>
+                            <div class="code-block">
+node default {
+  include lamp
+}
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; margin: 15px 0;">
+                        <div class="step-counter">5</div>
+                        <div>
+                            <strong>Apply and test:</strong>
+                            <div class="command-block">docker exec -it puppet-agent puppet agent -t</div>
+                            <div class="command-block">docker exec -it puppet-agent curl http://localhost</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <h2>🐛 Troubleshooting & Best Practices (15 minutes)</h2>
+                <button class="toggle-btn">▼</button>
+            </div>
+            <div class="section-content">
+                <div class="concept-box">
+                    <h3>🔍 Common Issues & Solutions</h3>
+                    <p>Learn how to debug Puppet issues and follow best practices for maintainable code.</p>
+                </div>
+
+                <h3>🛠️ Debugging Commands</h3>
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h4>📊 Check Puppet Status</h4>
+                        <div class="command-block">puppet agent -t --debug</div>
+                        <div class="command-block">puppet agent -t --noop</div>
+                    </div>
+                    <div class="info-card">
+                        <h4>📝 View Logs</h4>
+                        <div class="command-block">tail -f /var/log/puppetlabs/puppet/puppet.log</div>
+                        <div class="command-block">journalctl -u puppet</div>
+                    </div>
+                    <div class="info-card">
+                        <h4>✅ Validate Syntax</h4>
+                        <div class="command-block">puppet parser validate manifest.pp</div>
+                        <div class="command-block">puppet module list</div>
+                    </div>
+                    <div class="info-card">
+                        <h4>🔧 Test Configuration</h4>
+                        <div class="command-block">puppet apply --noop manifest.pp</div>
+                        <div class="command-block">puppet config print</div>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <h3>⚠️ Common Pitfalls to Avoid</h3>
+                    <ul>
+                        <li>Not using version control for manifests</li>
+                        <li>Hardcoding values instead of using variables</li>
+                        <li>Ignoring resource dependencies</li>
+                        <li>Not testing changes in development first</li>
+                        <li>Creating overly complex manifests</li>
+                    </ul>
+                </div>
+
+                <div class="practice-box">
+                    <h3>✨ Best Practices</h3>
+                    <ul>
+                        <li>Use modules for reusable code</li>
+                        <li>Follow the DRY principle (Don't Repeat Yourself)</li>
+                        <li>Use Hiera for data separation</li>
+                        <li>Test with --noop before applying</li>
+                        <li>Document your code with comments</li>
+                        <li>Use version control (Git)</li>
+                        <li>Monitor Puppet runs and reports</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <h2>🎓 Next Steps & Resources</h2>
+                <button class="toggle-btn">▼</button>
+            </div>
+            <div class="section-content">
+                <div class="concept-box">
+                    <h3>🚀 Continue Your Puppet Journey</h3>
+                    <p>You've completed the basics! Here's how to advance your Puppet skills.</p>
+                </div>
+
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h3>📚 Advanced Topics</h3>
+                        <ul>
+                            <li>Hiera for data management</li>
+                            <li>Custom facts and functions</li>
+                            <li>Puppet Forge modules</li>
+                            <li>Roles and profiles pattern</li>
+                            <li>Puppet Enterprise features</li>
+                        </ul>
+                    </div>
+                    <div class="info-card">
+                        <h3>🔗 Useful Resources</h3>
+                        <ul>
+                            <li><a href="https://puppet.com/docs/" target="_blank">Official Puppet Documentation</a></li>
+                            <li><a href="https://forge.puppet.com/" target="_blank">Puppet Forge</a></li>
+                            <li><a href="https://puppet.com/learning/" target="_blank">Puppet Learning VM</a></li>
+                            <li><a href="https://github.com/puppetlabs" target="_blank">Puppet Labs GitHub</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="lab-section">
+                    <h3>🧹 Cleanup Commands</h3>
+                    <div class="command-block">docker stop puppet-master puppet-agent</div>
+                    <div class="command-block">docker rm puppet-master puppet-agent</div>
+                    <div class="command-block">docker rmi puppet/puppetserver puppet/puppet-agent</div>
+                </div>
+
+                <div class="practice-box">
+                    <h3>🎯 Your Assignment</h3>
+                    <p>Create a Puppet module that:</p>
+                    <ol>
+                        <li>Installs and configures Nginx</li>
+                        <li>Creates a custom website with server information</li>
+                        <li>Sets up SSL certificates</li>
+                        <li>Configures log rotation</li>
+                        <li>Uses templates for configuration files</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let completedSections = 0;
+        const totalSections = 7;
+
+        function toggleSection(header) {
+            const content = header.nextElementSibling;
+            const toggle = header.querySelector('.toggle-btn');
+            
+            if (content.classList.contains('active')) {
+                content.classList.remove('active');
+                toggle.classList.remove('active');
+                completedSections = Math.max(0, completedSections - 1);
+            } else {
+                content.classList.add('active');
+                content.classList.add('animate-fade-in');
+                toggle.classList.add('active');
+                completedSections++;
+            }
+            
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const progress = (completedSections / totalSections) * 100;
+            document.getElementById('progress').style.width = progress + '%';
+        }
+
+        // Add some interactive animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate concept boxes
+            const conceptBoxes = document.querySelectorAll('.concept-box');
+            conceptBoxes.forEach((box, index) => {
+                setTimeout(() => {
+                    box.style.opacity = '1';
+                    box.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+
+            // Add hover effects to code blocks
+            const codeBlocks = document.querySelectorAll('.code-block, .command-block');
+            codeBlocks.forEach(block => {
+                block.addEventListener('click', function() {
+                    // Copy to clipboard functionality
+                    navigator.clipboard.writeText(this.textContent);
+                    
+                    // Visual feedback
+                    const original = this.style.background;
+                    this.style.background = '#4facfe';
+                    setTimeout(() => {
+                        this.style.background = original;
+                    }, 200);
+                });
+            });
+
+            // Auto-open first section
+            const firstSection = document.querySelector('.section-content');
+            const firstToggle = document.querySelector('.toggle-btn');
+            if (firstSection && firstToggle) {
+                firstSection.classList.add('active');
+                firstToggle.classList.add('active');
+                completedSections = 1;
+                updateProgress();
+            }
+        });
+
+        // Add timeline interaction
+        const timelineItems = document.querySelectorAll('.timeline-item');
+        timelineItems.forEach((item, index) => {
+            item.addEventListener('click', function() {
+                timelineItems.forEach(t => t.style.opacity = '0.5');
+                this.style.opacity = '1';
+                this.style.transform = 'scale(1.05)';
+                
+                setTimeout(() => {
+                    timelineItems.forEach(t => {
+                        t.style.opacity = '1';
+                        t.style.transform = 'scale(1)';
+                    });
+                }, 1000);
+            });
+        });
+    </script>
+</body>
+</html>
+    
