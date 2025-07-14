@@ -49,14 +49,7 @@ docker network create jenkins-network
 ### Step 3: Run Jenkins Container
 
 ```bash
-docker run -d \
-  --name jenkins-server \
-  --network jenkins-network \
-  -p 8080:8080 \
-  -p 50000:50000 \
-  -v jenkins_home:/var/jenkins_home \
-  -v /var/run/docker.sock:/var/run/docker.sock \
-  jenkins/jenkins:lts
+docker run -d --name jenkins-server --network jenkins-network -p 8080:8080 -p 50000:50000 -v jenkins_home:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock jenkins/jenkins:lts
 ```
 
 **Command Breakdown:**
