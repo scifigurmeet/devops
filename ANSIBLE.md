@@ -167,6 +167,11 @@ node2             ansible-docker-demo-node2             "/usr/sbin/sshd -D"     
 ```bash
 # Connect to the ansible-master container
 docker-compose exec ansible-master bash
+
+OR
+
+#alternative command
+docker exec -it ansible-master bash
 ```
 
 You should now be in the container as the ansible user at `/home/ansible/ansible-work`.
