@@ -111,7 +111,7 @@ jobs:
         run: mvn clean package
 
       - name: Upload artifact to repo
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: myapp-jar
           path: target/myapp-1.0-SNAPSHOT.jar
