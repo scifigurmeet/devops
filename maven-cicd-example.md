@@ -22,11 +22,7 @@ This guide walks you through:
 ## ⚡ Step 1: Create a Maven Project Locally
 
 ```bash
-mvn archetype:generate \
-  -DgroupId=com.example.app \
-  -DartifactId=myapp \
-  -DarchetypeArtifactId=maven-archetype-quickstart \
-  -DinteractiveMode=false
+mvn archetype:generate -DgroupId=com.example.app -DartifactId=myapp -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
 ```
 
 Navigate into the project:
